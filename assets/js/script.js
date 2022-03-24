@@ -13,21 +13,31 @@ var createTimeblocks = function(start, end) {
     for (var i = start; i < (end + 1); i++) {
         var timeBlockEl = $("<div>")
             .addClass("hour col-2 col-md-1 py-2")
-            .text(moment(start, "HH").format("HA"));
+            .text(moment(i, "HH").format("HA"));
         var eventBlockEl = $("<p>")
             .addClass("description col-8 col-md-10 p-1")
             .attr("id", "event");
-
         var saveBtn = $("<button>")
             .addClass("saveBtn col-2 col-md-1");
         var iconEl = $("<i>")
             .addClass("ri-save-2-fill")
         saveBtn.append(iconEl);
 
+        // get current time
+        var currentTime = moment().format("YYYY MM DD kk:mm");
+        var timeblockTime = moment(i, "HH").format("YYYY MM DD kk:mm");
+        // console.log(currentTime);
+        // console.log(timeblockTime);
+        if (moment(timeblockTime).isBefore(currentTime)) {
+            eventBlockEl.addClass("past");
+        } else if (moment(timeblockTime).isSame(currentTime)) {
+            eventBlockEl.addClass("present");
+        } else {
+            eventBlockEl.addClass("future");
+        }
+
         timeblocks.append(timeBlockEl, eventBlockEl, saveBtn);
         
-        // add 1 hour
-        start += 1;
     }
 
     $("#timeblocks-container").append(timeblocks);
@@ -61,3 +71,4 @@ $("#timeblocks-container").on("blur", "textarea", function() {
 
 // parameters indicates business hours' start time and end time
 createTimeblocks(9, 17);
+
