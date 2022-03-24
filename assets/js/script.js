@@ -17,9 +17,13 @@ var createTimeblocks = function(start, end) {
         var eventBlockEl = $("<p>")
             .addClass("description col-8 col-md-10 p-1")
             .attr("id", "event");
+
         var saveBtn = $("<button>")
             .addClass("saveBtn col-2 col-md-1");
-        
+        var iconEl = $("<i>")
+            .addClass("ri-save-2-fill")
+        saveBtn.append(iconEl);
+
         timeblocks.append(timeBlockEl, eventBlockEl, saveBtn);
         
         // add 1 hour
