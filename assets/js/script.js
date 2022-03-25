@@ -5,24 +5,20 @@ $("#currentDay").text(moment().format("dddd, MMMM Do"));
 
 // create timeblocks
 var createTimeblocks = function(start, end) {
+    savedEvents = JSON.parse(localStorage.getItem("events"));
+    console.log(savedEvents);
+    var counter = 0;
+
     // create each timeblocks element until it reaches end time
     for (var i = start; i < (end + 1); i++) {
-        var dateEl = $("#currentDay").text().trim();
         var timeVal = moment(i, "HH").format("HA");
-
-        events.push({
-            date: dateEl,
-            time: timeVal,
-            event: ""
-        });
-
         // create a container
         var timeBlockEl = $("<div>")
             .addClass("block-container row");
 
         var timeEl = $("<time>")
             .addClass("hour col-2 col-md-1 px-1 py-3")
-            .attr("datetime", moment(i, "HH").format("YYYY MM DD kk:mm"))
+            .attr("datetime", timeVal)
             .text(timeVal);
         var eventEl = $("<p>")
             .addClass("description col-8 col-md-10 p-2")
@@ -37,6 +33,25 @@ var createTimeblocks = function(start, end) {
 
         timeBlockEl.append(timeEl, eventEl, saveBtn);
         $("#timeblocks-container").append(timeBlockEl);
+
+        var dateEl = $("#currentDay").text().trim();
+        timeEl = $(".hour[datetime$='" + timeVal + "']");
+        var timeElVal = timeEl.text().trim();
+        eventEl = timeEl.parent().find("p");
+
+        if (savedEvents) {
+            if (dateEl === savedEvents[counter].date) {
+                eventEl.text(savedEvents[counter].event);
+            }
+        }
+
+        events.push({
+            date: dateEl,
+            time: timeElVal,
+            event: eventEl.text().trim()
+        });
+
+        counter += 1
     }
 }
 
@@ -93,9 +108,6 @@ $("#timeblocks-container").on("click", "button", function() {
     
     // console.log(events);
     for (var i = 0; i < events.length; i++) {
-        var savedTime = events[i].time;
-        var savedEvent = events[i].event;
-
         if (timeEl === events[i].time) {
             tempArr.push({
                 date: dateEl,
@@ -104,9 +116,9 @@ $("#timeblocks-container").on("click", "button", function() {
             });
         } else {
             tempArr.push({
-                date: dateEl,
-                time: savedTime,
-                event: savedEvent
+                date: events[i].date,
+                time: events[i].time,
+                event: events[i].event
             });
         }
     }
