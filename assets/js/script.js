@@ -1,3 +1,5 @@
+var events = [];
+
 // show current day and date in the header
 $("#currentDay").text(moment().format("dddd, MMMM Do"));
 
@@ -5,6 +7,15 @@ $("#currentDay").text(moment().format("dddd, MMMM Do"));
 var createTimeblocks = function(start, end) {
     // create each timeblocks element until it reaches end time
     for (var i = start; i < (end + 1); i++) {
+        var dateEl = $("#currentDay").text().trim();
+        var timeVal = moment(i, "HH").format("HA");
+
+        events.push({
+            date: dateEl,
+            time: timeVal,
+            event: ""
+        });
+
         // create a container
         var timeBlockEl = $("<div>")
             .addClass("block-container row");
@@ -12,7 +23,7 @@ var createTimeblocks = function(start, end) {
         var timeEl = $("<time>")
             .addClass("hour col-2 col-md-1 px-1 py-3")
             .attr("datetime", moment(i, "HH").format("YYYY MM DD kk:mm"))
-            .text(moment(i, "HH").format("HA"));
+            .text(timeVal);
         var eventEl = $("<p>")
             .addClass("description col-8 col-md-10 p-2")
             .attr("id", "event");
@@ -73,6 +84,36 @@ var checkCurrentTime = function(time, eventEl) {
         eventEl.addClass("future");
     }
 }
+
+$("#timeblocks-container").on("click", "button", function() {
+    var dateEl = $("#currentDay").text().trim();
+    var timeEl = $(this).parent().find(".hour").text().trim();
+    var eventEl = $(this).parent().find("#event").text().trim();
+    var tempArr = [];
+    
+    // console.log(events);
+    for (var i = 0; i < events.length; i++) {
+        var savedTime = events[i].time;
+        var savedEvent = events[i].event;
+
+        if (timeEl === events[i].time) {
+            tempArr.push({
+                date: dateEl,
+                time: timeEl,
+                event: eventEl
+            });
+        } else {
+            tempArr.push({
+                date: dateEl,
+                time: savedTime,
+                event: savedEvent
+            });
+        }
+    }
+
+    events = tempArr;
+    localStorage.setItem("events", JSON.stringify(events));
+});
 
 // parameters indicates business hours' start time and end time
 createTimeblocks(9, 17);
