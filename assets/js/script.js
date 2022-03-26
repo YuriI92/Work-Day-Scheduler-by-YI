@@ -29,7 +29,7 @@ var createTimeblocks = function(start, end) {
         // create each element
         var timeEl = $("<time>")
             .addClass("hour col-2 col-md-1 px-1 py-3")
-            .attr("datetime", timeVal)
+            .attr("datetime", i)
             .text(timeVal);
         var eventEl = $("<p>")
             .addClass("description col-8 col-md-10 p-2")
@@ -49,7 +49,7 @@ var createTimeblocks = function(start, end) {
 
         // get element's content to store in events array
         var dateEl = $("#currentDay").text().trim();
-        timeEl = $(".hour[datetime$='" + timeVal + "']");
+        timeEl = $(".hour[datetime$='" + i + "']");
         eventEl = timeEl.parent().find("p");
 
         // if saved events in local storage,
@@ -94,7 +94,7 @@ $("#timeblocks-container").on("blur", "textarea", function() {
         .addClass("description col-8 col-md-10 p-2")
         .attr("id", "event")
         .text(text);
-    var time = $(this).parent().find(".hour").text().trim();
+    var time = $(this).parent().find(".hour").attr("datetime");
     
     // check current time and re-indicate state with color
     checkCurrentTime(time, eventEl);
@@ -115,7 +115,7 @@ var checkCurrentTime = function(time, eventEl) {
         eventEl.addClass("past");
     } else if (moment(timeblockTime).isSame(currentTime, "hour")) {
         eventEl.addClass("present");
-    } else {
+    } else if (moment(timeblockTime).isAfter(currentTime, "hour")) {
         eventEl.addClass("future");
     }
 }
@@ -159,8 +159,7 @@ createTimeblocks(start, end);
 setInterval(function() {
     $(".description").each(function(index) {
         var time = index + start;
-        var timeVal = moment(today + " " + time, dateFormat).format("hA");
-        var eventEl = $(".hour[datetime$='" + timeVal + "']").parent().find("p");
+        var eventEl = $(".hour[datetime$='" + time + "']").parent().find("p");
 
         checkCurrentTime(time, eventEl);
     })
