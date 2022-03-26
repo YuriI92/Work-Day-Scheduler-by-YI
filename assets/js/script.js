@@ -1,6 +1,8 @@
 var start = 9;
 var end = 17;
 var events = [];
+var dateFormat = "YYYY-M-D H:mm";
+var today = moment().format("YYYY-MM-DD");
 
 // show current day and date in the header
 $("#currentDay").text(moment().format("dddd, MMMM Do"));
@@ -13,7 +15,8 @@ var createTimeblocks = function(start, end) {
 
     // create each timeblocks element until it reaches end time
     for (var i = start; i < (end + 1); i++) {
-        var timeVal = moment(i, ["kk", "YYYY-M-D H:m"]).format("hA");
+        var time = i + ":00";
+        var timeVal = moment(today + " " + time, dateFormat).format("hA");
         // create a container
         var timeBlockEl = $("<div>")
             .addClass("block-container row");
@@ -88,8 +91,8 @@ $("#timeblocks-container").on("blur", "textarea", function() {
 
 var checkCurrentTime = function(time, eventEl) {
     // get current time
-    var currentTime = moment().format("YYYY MM DD kk:mm");
-    var timeblockTime = moment(time, ["kk", "YYYY-M-D H:m"]).format("YYYY MM DD kk:mm");
+    var currentTime = moment().format("YYYY-MM-DD kk:mm");
+    var timeblockTime = moment(today + " " + time, dateFormat).format("YYYY-MM-DD kk:mm");
 
     eventEl.removeClass("past present future");
     console.log(currentTime);
@@ -137,8 +140,9 @@ createTimeblocks(start, end);
 setInterval(function() {
     $(".description").each(function(index) {
         var time = index + start;
+        var timeVal = moment(today + " " + time, dateFormat).format("hA");
         
-        var eventEl = $(".hour[datetime$='" + time + "']").parent().find("p");
+        var eventEl = $(".hour[datetime$='" + timeVal + "']").parent().find("p");
         console.log(eventEl);
         checkCurrentTime(time, eventEl);
     })
