@@ -12,8 +12,8 @@ This is a work day calendar to manage daily plans effectively. Easy to set and s
     ![alt text](./assets/images/screencap_03_entering-events.png)
 * Save the events to local storage by clicking the button next to the events you want to save.<br/>
     ![alt text](./assets/images/screencap_04_saving-events1.png)
+* The save events will persist after refreshing the page.<br/>
     ![alt text](./assets/images/screencap_04_saving-events2.png)
-* The save events will persist after refreshing the page.
 
 ## Built With
 * HTML
