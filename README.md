@@ -24,7 +24,7 @@ This is a work day calendar to manage daily plans effectively. Easy to set and s
 * jQuery
 
 ## Website
-https://yurii92.github.io/yi-work-day-scheduler/
+https://yurii92.github.io/Work-Day-Scheduler-by-YI/
 ![alt text](./assets/images/screenscap_01_main.png)
 
 ## Contribution
