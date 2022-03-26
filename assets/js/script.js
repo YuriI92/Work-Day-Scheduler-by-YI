@@ -1,3 +1,5 @@
+var start = 17;
+var end = 24;
 var events = [];
 
 // show current day and date in the header
@@ -11,7 +13,7 @@ var createTimeblocks = function(start, end) {
 
     // create each timeblocks element until it reaches end time
     for (var i = start; i < (end + 1); i++) {
-        var timeVal = moment(i, "HH").format("HA");
+        var timeVal = moment(i, "kk").format("hA");
         // create a container
         var timeBlockEl = $("<div>")
             .addClass("block-container row");
@@ -36,7 +38,6 @@ var createTimeblocks = function(start, end) {
 
         var dateEl = $("#currentDay").text().trim();
         timeEl = $(".hour[datetime$='" + timeVal + "']");
-        var timeElVal = timeEl.text().trim();
         eventEl = timeEl.parent().find("p");
 
         if (savedEvents) {
@@ -47,11 +48,11 @@ var createTimeblocks = function(start, end) {
 
         events.push({
             date: dateEl,
-            time: timeElVal,
+            time: timeVal,
             event: eventEl.text().trim()
         });
 
-        counter += 1
+        counter += 1;
     }
 }
 
@@ -89,6 +90,8 @@ var checkCurrentTime = function(time, eventEl) {
     // get current time
     var currentTime = moment().format("YYYY MM DD kk:mm");
     var timeblockTime = moment(time, "HH").format("YYYY MM DD kk:mm");
+
+    eventEl.removeClass("past present future");
     // console.log(currentTime);
     // console.log(timeblockTime);
     if (moment(timeblockTime).isBefore(currentTime, "hour")) {
@@ -98,6 +101,7 @@ var checkCurrentTime = function(time, eventEl) {
     } else {
         eventEl.addClass("future");
     }
+    console.log(eventEl);
 }
 
 $("#timeblocks-container").on("click", "button", function() {
@@ -128,5 +132,12 @@ $("#timeblocks-container").on("click", "button", function() {
 });
 
 // parameters indicates business hours' start time and end time
-createTimeblocks(9, 17);
+createTimeblocks(start, end);
 
+setInterval(function() {
+    $(".description").each(function(index) {
+        var time = moment(index + start, "HH").format("HA");
+        var eventEl = $(".hour[datetime$='" + time + "']").parent().find("p");
+        checkCurrentTime(time, eventEl);
+    })
+}, (1000 * 60) * 5);
